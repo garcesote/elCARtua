@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "800171513430",
+    "project_id": "elcartua",
+    "storage_bucket": "elcartua.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:800171513430:android:a74443a33b2dcae9b68df7",
+        "android_client_info": {
+          "package_name": "com.ugarcia.elcartua"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "800171513430-8m5212vlhdb88litmsobsn5tlsgj6re4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ugarcia.elcartua",
+            "certificate_hash": "338968d742d9cd1cb92d5323cc15b086b3eefe2b"
+          }
+        },
+        {
+          "client_id": "800171513430-f250ukvk5d9r6vrume9rmoeu2fummi3v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ugarcia.elcartua",
+            "certificate_hash": "af3e99ff2e77db5f516e5fd6160ecefaa9fdc802"
+          }
+        },
+        {
+          "client_id": "800171513430-7qhs9k6nanqpa1cqv3isesi5q0at6bvd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiLfb_T81Kiru7UiyFX9P7GkEPD0ddyy8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "800171513430-7qhs9k6nanqpa1cqv3isesi5q0at6bvd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

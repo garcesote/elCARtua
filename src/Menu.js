@@ -4,10 +4,12 @@ import { View, Text, TouchableOpacity } from 'react-native';
 const Menu = ({ navigation }) => {
   return (
     <View>
-      <TouchableOpacity style={{ width: 'auto', height: 50, alignItems: 'center', margin: 2, justifyContent: 'center', borderWidth: 2}} onPress={() => navigation.navigate('Login')}>
+      <TouchableOpacity style={{ width: 'auto', height: 50, alignItems: 'center', margin: 2, justifyContent: 'center', borderWidth: 2}} 
+        onPress={() => navigation.navigate('Login')}>
         <Text >Pantalla Login</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={{ width: 'auto', height: 50, alignItems: 'center', margin: 2,justifyContent: 'center',  borderWidth: 2}}onPress={() => navigation.navigate('Reserva')}>
+      <TouchableOpacity style={{ width: 'auto', height: 50, alignItems: 'center', margin: 2,justifyContent: 'center',  borderWidth: 2}}
+        onPress={() => navigation.navigate('Reserva')}>
         <Text>Pantalla Reserva</Text>
       </TouchableOpacity>
     </View>
