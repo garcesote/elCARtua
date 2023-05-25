@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Reserva from './src/screens/Reserva';
 import Login from './src/screens/Login';
 import Menu from './src/Menu';
+import Home from './src/screens/Home';
 
 import { collection, query, where, onSnapshot, getFirestore, doc, getDoc, getDocs } from "firebase/firestore";
 import { initializeApp } from 'firebase/app';
@@ -12,6 +13,7 @@ import { initializeApp } from 'firebase/app';
 const Stack = createStackNavigator();
 
 const App = () => {
+
   const firebaseConfig = {
     apiKey: "AIzaSyANwp-t3_n4XYJREdQhAcm2eAD1wA8aXbE",
     authDomain: "elcartua.firebaseapp.com",
@@ -22,6 +24,7 @@ const App = () => {
     appId: "1:800171513430:web:80abc96821bec8cbb68df7",
     measurementId: "G-KZHKSDLTMZ"
   };
+
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
@@ -42,7 +45,6 @@ const App = () => {
     querySnapshot.forEach((doc) => {
       console.log(doc.id, " => ", doc.data());
     });
-
   }
 
 
@@ -52,6 +54,7 @@ const App = () => {
         <Stack.Screen name="Menu" component={Menu} />
         <Stack.Screen name="Reserva" component={Reserva} />
         <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Home" component={Home} />
       </Stack.Navigator>
     </NavigationContainer>
   );
