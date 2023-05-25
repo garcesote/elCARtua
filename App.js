@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Reserva from './src/screens/Reserva';
 import Login from './src/screens/Login';
 import Menu from './src/Menu';
+import { AsyncStorage } from 'react-native';
 
 import { collection, query, where, onSnapshot, getFirestore, doc, getDoc, getDocs } from "firebase/firestore";
 import { initializeApp } from 'firebase/app';
@@ -28,21 +29,30 @@ const App = () => {
   const[today_band, setToday_band] = useState('');
 
   useEffect(() => {
+    console.log("useEffect app");
     const today = new Date();
-    setToday_band(today.getDate().toString() + "_" + (today.getMonth() + 1).toString() + "_" + today.getFullYear().toString());
+    let today_band_aux = "";
+    today_band_aux = today.getDate().toString() + "_" + (today.getMonth() + 1).toString() + "_" + today.getFullYear().toString();
+    setToday_band(today_band_aux);
     
-    queryDB();
+    queryDB(today_band_aux);
   }, [])
 
-  const queryDB = async () => {
-    console.log("query to db");
-    console.log(today_band);
-    const q = query(collection(db, "groups", "group1", "books"), where("band", "<=", today_band));
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      console.log(doc.id, " => ", doc.data());
-    });
-
+  const queryDB = (today_band_aux) => {
+    console.log("Today_band: " + today_band_aux);
+    console.log("query to db...");
+    let db_bands = [];
+    const q = query(collection(db, "groups", "group1", "books")); // , where("band", "==", true)
+    getDocs(q)
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          db_bands.push(doc.data());
+          // console.log(doc.id, " => ", doc.data());
+        });
+      }).catch((error) => {
+        console.error(error);
+      })
+    console.log(db_bands);
   }
 
 
