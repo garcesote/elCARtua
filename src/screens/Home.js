@@ -6,7 +6,6 @@ import auth from '@react-native-firebase/auth';
 import { firebase } from '@react-native-firebase/database';
 
 
-
 const Home = ({navigation}) => {
 
     const usersRef = firebase
@@ -17,7 +16,7 @@ const Home = ({navigation}) => {
     const groupsRef = firebase
         .app()
         .database('https://elcartua-default-rtdb.europe-west1.firebasedatabase.app/')
-        .ref('/groups');
+        .ref('/groups/');
     
     const [userName, setUserName] = useState("");
     const [userCloudData, setUserCloudData] = useState("");

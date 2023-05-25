@@ -15,14 +15,14 @@ const TablaReservas = ({ vehicle, book_time }) => {
     for (let i = 0; i < 24; i += parseInt(book_time)) {
       const next_band = parseInt(book_time) + i;
       const band_hour = i + "_" + next_band;
-      console.log(band_day + "_" + band_hour);
+      // console.log(band_day + "_" + band_hour);
       const band = { band: band_day + "_" + band_hour, start_time: i, end_time: next_band };
       bands_aux.push(band);
     }
     setBands(bands_aux);
   }, [])
 
-  console.log(bands);
+  // console.log(bands);
 
   const renderItem = ({ item }) => (
     <View style={styles.band}>
