@@ -3,13 +3,23 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import auth from '@react-native-firebase/auth';
-import referenceDB from '../comun/firebase';
-
+import { firebase } from '@react-native-firebase/database';
 
 
 const Home = ({navigation}) => {
 
+    const usersRef = firebase
+        .app()
+        .database('https://elcartua-default-rtdb.europe-west1.firebasedatabase.app/')
+        .ref('/users');
+    
+    const groupsRef = firebase
+        .app()
+        .database('https://elcartua-default-rtdb.europe-west1.firebasedatabase.app/')
+        .ref('/groups/');
+    
     const [userName, setUserName] = useState("");
+    const [userCloudData, setUserCloudData] = useState("");
 
     const logout = () => {
         auth()
@@ -21,21 +31,38 @@ const Home = ({navigation}) => {
     }
 
     useEffect(() => {
-        getUserData();
+        //Recoge la info acerca de la sesión iniciada
+        getLocalUserID().then(id =>{
+            console.log('ID: ',id);
+            getCloudUserData(id);
+        })
     },[]);
 
-    const getUserData = async () => {
-        const userData = await AsyncStorage.getItem("user_data"); 
-        console.log(JSON.parse(userData));
-        if(userData){
-            setUserName(JSON.parse(userData).user.displayName);
+
+    const getLocalUserID = async () => {
+        try{
+            const userData = await AsyncStorage.getItem("user_data");
+            setUserName(JSON.parse(userData).userName);
+            console.log('USER:', JSON.parse(userData))
+            return(JSON.parse(userData).userID); 
+        }catch (error) {
+            console.error('Error al consultar AsyncStorage: ', error);
+            throw error;
+          }
+    }
+    
+    const getCloudUserData = async (id) => {
+        try{
+            const snapshot = await usersRef.child(id).once('value');
+            const userData = snapshot.val();
+            setUserCloudData(userData);
+            console.log('USUARIO CLOUD DATA: ', userData);
+        }catch (error) {
+            console.error('Error al consultar la base de datos: ', error);
+            throw error;
         }
     }
     
-    referenceDB.on('value', snapshot => {
-        console.log('Userdatat: ',snapshot.val());
-    })
-
     return (
         <SafeAreaView>
             <View>

@@ -1,21 +1,4 @@
 {
-  "extra": {
-    "eas": {
-      "projectId": "af403804-5a8b-4f06-b3ed-12511ce61dcf"
-    }
-  },
-  "expo": {
-    "android": {
-      "package": "com.ugarcia.elcartua",
-      "googleServicesFile": "./google-services.json"
-    },
-    "plugins": [
-      "@react-native-google-signin/google-signin"
-    ],
-    "extra": {
-      "eas": {
-        "projectId": "af403804-5a8b-4f06-b3ed-12511ce61dcf"
-      }
-    }
-  }
+  "name": "elCARtua",
+  "displayName": "elCARtua"
 }
