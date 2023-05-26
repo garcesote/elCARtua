@@ -5,7 +5,7 @@ import Reserva from './src/screens/Reserva';
 import Login from './src/screens/Login';
 import Menu from './src/Menu';
 import Home from './src/screens/Home';
-import { AsyncStorage } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { collection, query, where, onSnapshot, getFirestore, doc, getDoc, getDocs } from "firebase/firestore";
 import { initializeApp } from 'firebase/app';
@@ -29,7 +29,7 @@ const App = () => {
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  const[today_band, setToday_band] = useState('');
+  const [today_band, setToday_band] = useState('');
 
   useEffect(() => {
     console.log("useEffect app");
@@ -37,8 +37,10 @@ const App = () => {
     let today_band_aux = "";
     today_band_aux = today.getDate().toString() + "_" + (today.getMonth() + 1).toString() + "_" + today.getFullYear().toString();
     setToday_band(today_band_aux);
-    
-    queryDB(today_band_aux);
+
+    AsyncStorage.setItem("today_band", today_band_aux);
+
+    //queryDB(today_band_aux);
   }, [])
 
   const queryDB = (today_band_aux) => {
