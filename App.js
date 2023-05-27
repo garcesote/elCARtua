@@ -65,13 +65,13 @@ const App = () => {
   return (
     <NavigationContainer>
       <ContextBooksProvider>
-        <Stack.Navigator initialRouteName="Menu">
-          <Stack.Screen name="Menu" component={Menu} />
+        <Stack.Navigator initialRouteName="Login">
           <Stack.Screen name="Reserva" component={Reserva} />
-          <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="Login" component={Login} options={{ headerLeft: null }} />
+          <Stack.Screen name="Home" component={Home} options={{ headerLeft: null }} />
         </Stack.Navigator>
       </ContextBooksProvider>
+
     </NavigationContainer>
   );
 };
