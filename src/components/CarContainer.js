@@ -9,6 +9,7 @@ const CarContainer = ({ nombre, navigation }) => {
         <View style={styles.container}>
             <Icon name="car" size={30} color="black" />
             <Text style={styles.text}>{nombre}</Text>
+            <Icon name="camera" size={30} style={{alignSelf: 'flex-start',}} color="black" />
         </View>
     </TouchableOpacity>
   );

@@ -59,6 +59,10 @@ const Home = ({navigation}) => {
             getCloudUserData(id).then(id => {
                 //Si el usuario tiene grupo cargo la info de grupo
                 if(id!='null'){
+                    AsyncStorage.setItem("user_data", 
+                        JSON.stringify({userName: userLocalData.userName, userID: userLocalData.userID, mail: userLocalData.mail,
+                        photoURL: userLocalData.photoURL, logged_in:true, groupId: id})
+                    );
                     getGroupData(id);
                 }
                 setInitializating(false);
