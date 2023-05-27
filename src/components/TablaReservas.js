@@ -1,24 +1,18 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, ScrollView, Button, StyleSheet, Dimensions, FlatList, TouchableOpacity, Alert } from 'react-native';
-import BookBand from './BookBand';
-import { ContextBooks } from '../comun/ContextBooks';
+import { View, Text, Button, StyleSheet, Dimensions, FlatList, TouchableOpacity, Alert } from 'react-native';
 
 const { height } = Dimensions.get('window');
 
-const TablaReservas = ({ vehicle, book_time, booksToday, todayBand, setCloudNewBooks, deleteCloudBook }) => {
+const TablaReservas = ({ vehicle, book_time, booksToday, todayBand, setCloudNewBooks, deleteCloudBook, user }) => {
 
   const [bands, setBands] = useState([]);
-  const { bookingBands, setBookingBands } = useContext(ContextBooks);
-  const [bookingBandsAux, setBookingBandsAux] = useState([]);
-  const user = "yo";
 
   useEffect(() => {
     const bands_aux = [];
     for (let i = 0; i < 24; i += parseInt(book_time)) {
       const next_band = parseInt(book_time) + i;
       const band_hour = i + "_" + next_band;
-      // console.log(band_day + "_" + band_hour);
-      const band = { id: todayBand + "_" + band_hour, start_time: i, end_time: next_band, booked: false, bookedBy: "", bookedVehicle: "" };
+      const band = { id: vehicle + "_" + todayBand + "_" + band_hour, start_time: i, end_time: next_band, booked: false, bookedBy: "", bookedVehicle: "" };
       bands_aux.push(band);
     }
     setBands(bands_aux);
@@ -36,16 +30,11 @@ const TablaReservas = ({ vehicle, book_time, booksToday, todayBand, setCloudNewB
         return { ...item, booked: 1, bookedBy: matchingBookedBand.bookedBy, bookedVehicle: matchingBookedBand.bookedVehicle };
       }
       else {
-        return { ...item, booked: 0 };
+        return { ...item, booked: 0, bookedBy: "", bookedVehicle: "" };
       }
     });
-    console.log("\n");
-    // console.log(bookedBands);
-    console.log("\nbookedBands:");
     setBands(bookedBands);
   }
-
-  console.log(bands);
 
   const getBookedStyle = (booked, bookedBy) => {
     if (booked === 0) {
@@ -65,11 +54,25 @@ const TablaReservas = ({ vehicle, book_time, booksToday, todayBand, setCloudNewB
   const renderItem = ({ item }) => (
     <TouchableOpacity
       onPress={() => bandPressed(item)}
-      style={[styles.band, getBookedStyle(item.booked, item.bookedBy)]}
+      style={[styles.timeSlotContainer, getBookedStyle(item.booked, item.bookedBy)]}
     >
-      <Text>{item.id}</Text>
-      <Text>Reservado por: {item.bookedBy}</Text>
-      <Text>Vehicle: {item.bookedVehicle}</Text>
+      <View style={styles.timeContainer}>
+        <Text style={styles.time}>Desde: {item.start_time} : 00</Text>
+        <Text style={styles.time}>Hasta: {item.end_time} : 00</Text>
+      </View>
+      <View style={styles.statusContainer}>
+        {
+          item.booked === 0 ? (
+            <Text style={styles.statusText}>Libre</Text>
+          ) : item.booked === 1 && item.bookedBy === user ? (
+            <Text style={styles.statusText}>Reservado por ti</Text>
+          ) : item.booked === 1 ? (
+            <Text style={styles.statusText}>Reservado por {item.bookedBy}</Text>
+          ) : (
+                  <Text style={styles.statusText}>Solicitando reserva por ti</Text>
+                )
+        }
+      </View>
     </TouchableOpacity>
   );
 
@@ -105,8 +108,6 @@ const TablaReservas = ({ vehicle, book_time, booksToday, todayBand, setCloudNewB
         bandsCopy[index].booked = 0;
 
       }
-      // bandsCopy[index].bookedVehicle = vehicle;
-      // bandsCopy[index].bookedBy = "Coger dato de usuario";
       setBands(bandsCopy);
     }
   }
@@ -120,24 +121,33 @@ const TablaReservas = ({ vehicle, book_time, booksToday, todayBand, setCloudNewB
   }
 
   return (
-    <View>
-      <Text>Selecciona las franjas y reserva</Text>
-      <Text>{vehicle}</Text>
+    <View style={styles.container}>
       <FlatList
         data={bands}
-        extraData={bands}
+        extraData={booksToday}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
       >
       </FlatList>
-      <Button title="Reservar" onPress={bookNewBands}></Button>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          onPress={bookNewBands}
+          style={styles.button}
+        >
+          <Text style={styles.buttonText}>Reservar</Text>
+        </TouchableOpacity>
+      </View>
+
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   band: {
-    minHeight: height / 5,
+    minHeight: height / 6,
     borderBottomWidth: 1,
   },
   booked: {
@@ -147,10 +157,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightgreen'
   },
   booking: {
-    backgroundColor: 'blue'
+    backgroundColor: '#FDECB6'
   },
   bookedByMe: {
-    backgroundColor: 'lightblue'
+    backgroundColor: '#B7D9F2'
   },
   container: {
     flexGrow: 1,
@@ -183,6 +193,51 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 30,
     fontWeight: 'bold',
+  },
+  buttonContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+  },
+  button: {
+    backgroundColor: 'blue',
+    borderRadius: 8,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  timeSlotContainer: {
+    minHeight: height / 6,
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: 'lightgray',
+  },
+  timeContainer: {
+    marginRight: 10,
+  },
+  time: {
+    fontSize: 16,
+  },
+  statusContainer: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  statusText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
 

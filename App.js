@@ -44,22 +44,22 @@ const App = () => {
     //queryDB(today_band_aux);
   }, [])
 
-  const queryDB = (today_band_aux) => {
-    console.log("Today_band: " + today_band_aux);
-    console.log("query to db...");
-    let db_bands = [];
-    const q = query(collection(db, "groups", "group1", "books")); // , where("band", "==", true)
-    getDocs(q)
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          db_bands.push(doc.data());
-          // console.log(doc.id, " => ", doc.data());
-        });
-      }).catch((error) => {
-        console.error(error);
-      })
-    console.log(db_bands);
-  }
+  // const queryDB = (today_band_aux) => {
+  //   console.log("Today_band: " + today_band_aux);
+  //   console.log("query to db...");
+  //   let db_bands = [];
+  //   const q = query(collection(db, "groups", "group1", "books")); // , where("band", "==", true)
+  //   getDocs(q)
+  //     .then((querySnapshot) => {
+  //       querySnapshot.forEach((doc) => {
+  //         db_bands.push(doc.data());
+  //         // console.log(doc.id, " => ", doc.data());
+  //       });
+  //     }).catch((error) => {
+  //       console.error(error);
+  //     })
+  //   console.log(db_bands);
+  // }
 
 
   return (

@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 const CarContainer = ({ nombre, navigation }) => {
   return (
-    <TouchableOpacity onPress={() => navigation.navigate("Reserva")}>
+    <TouchableOpacity onPress={() => navigation.navigate("Reserva", {vehicle: nombre})}>
         <View style={styles.container}>
             <Icon name="car" size={30} color="black" />
             <Text style={styles.text}>{nombre}</Text>
