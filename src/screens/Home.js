@@ -160,27 +160,29 @@ const Home = ({navigation}) => {
     };
 
     const deleteGroup = async () => {
-        if(groupData){
-            try {
-                console.log('HOLAAA');
-                console.log(groupData);
-                groupData.groupData.users.map(user => {
-                    const key = user.userID;
-                    console.log(key);
-                    // Añado el grupo al usuario
-                    usersRef.child(key).update({
-                    group: 'null',
-                    });
-                })
-                const groupKey = groupData.id;
-                groupsRef.child(groupKey).remove();
-                Alert.alert('El grupo se ha borrado correctamente');
-                reloadPage();
-            }catch {
-                console.error('Error al consultar al borrar el grupo de la db: ', error);
-                throw error;
+        //Actualiza la página por si hay usuarios que justo se han unido
+        reloadPage()
+            if(groupData){
+                try {
+                    console.log('HOLAAA');
+                    console.log(groupData.groupData.users);
+                    groupData.groupData.users.map(user => {
+                        const key = user.userID;
+                        console.log(key);
+                        // Añado el grupo al usuario
+                        usersRef.child(key).update({
+                            group: 'null',
+                        });
+                    })
+                    const groupKey = groupData.id;
+                    groupsRef.child(groupKey).remove();
+                    Alert.alert('El grupo se ha borrado correctamente');
+                    reloadPage();
+                }catch {
+                    console.error('Error al consultar al borrar el grupo de la db: ', error);
+                    throw error;
+                }
             }
-        }
     }
     
     if(initializating){
