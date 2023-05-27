@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, Text, Button } from 'react-native';
+import {SafeAreaView, ActivityIndicator, StatusBar, StyleSheet, View, Text, Dimensions, TouchableOpacity, Image} from 'react-native';
 import { useState, useEffect } from 'react';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { firebase } from '@react-native-firebase/database';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const Login = ({navigation}) => {
 
@@ -41,7 +42,8 @@ const Login = ({navigation}) => {
   const SuccesLogIn = (user) => {
     
     AsyncStorage.setItem("user_data", 
-        JSON.stringify({userName: user.user.displayName, userID: user.user.uid, logged_in:true})
+        JSON.stringify({userName: user.user.displayName, userID: user.user.uid, mail: user.user.email,
+          photoURL: user.user.photoURL, logged_in:true})
     );
   }
 
@@ -86,11 +88,87 @@ const Login = ({navigation}) => {
   })
   }
 
-  return (
-    <View>
-      <Button title="Login con google" onPress={signinWithGoogle}></Button>
-    </View>
-  );
-};
+  if(initializing){
+  
+    return (
+        <View style={styles.container}>
+            <ActivityIndicator size="large" color="#000000" />
+            <Text style={styles.loadingText}>Cargando...</Text>
+        </View>
+    );
+  }else{
+    return (
+      <SafeAreaView style={styles.safeArea}>
+      <StatusBar barStyle="light-content" />
+      <View style={styles.container}>
+          <View style={styles.topContent}>
+          <Text style={styles.mainText}>
+          elCARtua
+          </Text>
+          <Icon name="car" size={60} color="white" />
+          </View>
+          <View style={styles.bottomContent}>
+              <TouchableOpacity style={styles.googleButton} onPress = {() => {signinWithGoogle()}}>
+                  <Image style={styles.googleIcon} source={{ uri: "https://i.ibb.co/j82DCcR/search.png"}}/>
+                  <Text style={styles.googleButtonText}>Sign in with Google</Text>
+              </TouchableOpacity>
+          </View>
+      </View>
+      </SafeAreaView>
+    );
+  }
+  
+  
+
+}
+
+const styles = StyleSheet.create({
+  safeArea: {
+   backgroundColor: "#262b2f"
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  container: {
+   height: Dimensions.get('window').height,
+   backgroundColor: "#262b2f",
+  },
+  topContent: {
+   flex: 1,
+   alignItems: 'center',
+   justifyContent: 'center'
+  },
+  bottomContent: {
+   flex: 1,
+   alignItems: 'center',
+   justifyContent: 'center'
+  },
+  mainText: {
+   fontSize: 54,
+   color: "white",
+  },
+  googleButton: {
+   backgroundColor: "white",
+   borderRadius: 4,
+   paddingHorizontal: 34,
+   paddingVertical: 16,
+   flexDirection: 'row',
+   justifyContent: 'center',
+   alignItems: 'center'
+  },
+  googleButtonText: {
+   marginLeft: 16,
+   fontSize: 18,
+   fontWeight: '600'
+  },
+  googleIcon: {
+   height: 24,
+   width: 24
+  }
+ });
+
+
 
 export default Login;
