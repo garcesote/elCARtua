@@ -6,6 +6,7 @@ import Login from './src/screens/Login';
 import Menu from './src/Menu';
 import Home from './src/screens/Home';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ContextBooksProvider } from './src/comun/ContextBooks';
 
 import { collection, query, where, onSnapshot, getFirestore, doc, getDoc, getDocs } from "firebase/firestore";
 import { initializeApp } from 'firebase/app';
@@ -63,12 +64,14 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Menu">
-        <Stack.Screen name="Menu" component={Menu} />
-        <Stack.Screen name="Reserva" component={Reserva} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Home" component={Home} />
-      </Stack.Navigator>
+      <ContextBooksProvider>
+        <Stack.Navigator initialRouteName="Menu">
+          <Stack.Screen name="Menu" component={Menu} />
+          <Stack.Screen name="Reserva" component={Reserva} />
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Home" component={Home} />
+        </Stack.Navigator>
+      </ContextBooksProvider>
     </NavigationContainer>
   );
 };
