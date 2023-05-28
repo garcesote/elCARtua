@@ -105,7 +105,9 @@ const Home = ({ navigation }) => {
             const userData = await AsyncStorage.getItem("user_data");
             setUserLocalData(JSON.parse(userData));
             console.log('USER LOCAL:', JSON.parse(userData));
-            return (JSON.parse(userData).userID);
+            if(JSON.parse(userData).userID){
+                return (JSON.parse(userData).userID);
+            }
         } catch (error) {
             console.error('Error al consultar AsyncStorage: ', error);
             throw error;
@@ -280,12 +282,8 @@ const Home = ({ navigation }) => {
                         </SafeAreaView>
                     );
                 }
-
-
             }
         }
-
-
     }
 };
 
