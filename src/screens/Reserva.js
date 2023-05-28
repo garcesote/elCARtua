@@ -4,6 +4,8 @@ import TablaReservas from '../components/TablaReservas';
 import { firebase } from '@react-native-firebase/database';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ContextBooks } from '../comun/ContextBooks';
+import messaging from '@react-native-firebase/messaging';
+import axios from 'axios';
 
 const Reserva = ({ route }) => {
 
@@ -12,7 +14,7 @@ const Reserva = ({ route }) => {
   const { booksToday, setBooksToday } = useContext(ContextBooks);
   const [booksRef, setBooksRef] = useState("");
   const [userName, setUserName] = useState("");
-
+  const [groupId, setGroupId] = useState("");
   const book_time = "4";
 
   useEffect(() => {
@@ -20,6 +22,22 @@ const Reserva = ({ route }) => {
     getLocalUserData();
     getLocalTodayBand();
     getBooksRef();
+    messaging()
+      .getToken()
+      .then(token => {
+        // Suscribir al dispositivo al tema
+        messaging()
+          .subscribeToTopic("test")
+          .then(() => {
+            console.log('Dispositivo suscrito al topic ' + "test");
+          })
+          .catch(error => {
+            console.log('Error al suscribir el dispositivo al tema:', error);
+          });
+      })
+      .catch(error => {
+        console.log('Error al obtener el token de registro:', error);
+      });
   }, []);
 
   useEffect(() => {
@@ -58,6 +76,7 @@ const Reserva = ({ route }) => {
         .database('https://elcartua-default-rtdb.europe-west1.firebasedatabase.app/')
         .ref('/groups/' + id + '/books/');
 
+      setGroupId(id);
       setBooksRef(ref);
     } catch (error) {
       console.error('Error al consultar AsyncStorage: ', error);
@@ -112,6 +131,7 @@ const Reserva = ({ route }) => {
   const setCloudNewBooks = (books) => {
     let reservado = false;
     console.log("userName: " + userName);
+    let notificationData = [];
     books.map((item) => {
       if (item.booked === 2) {
         booksRef.child(item.id)
@@ -119,13 +139,15 @@ const Reserva = ({ route }) => {
             bookedBy: userName,
             bookedVehicle: vehicle,
           }).then(
-            reservado = true
+            reservado = true,
+            notificationData.push(item)
           )
           .catch(error => console.error('Error updating data: ', error));
       }
     })
 
     if (reservado) {
+      sendNotificationToGroup(notificationData, userName, vehicle);
       Alert.alert(
         "Atención",
         "Reserva realizada con éxito"
@@ -137,6 +159,33 @@ const Reserva = ({ route }) => {
         "Selecciona franjas para reservar"
       )
     }
+  }
+
+  const sendNotificationToGroup = (notificationData, userName, vehicle) => {
+    console.log("notificationData: ");
+    console.log(notificationData);
+    let body = userName + " ha reservado " + vehicle + " las siguientes horas: ";
+    notificationData.map((item) => {
+      body += item.start_time.toString() + " - " + item.end_time.toString();
+    })
+
+    const data = {
+      title: 'Nueva reserva!',
+      body: body,
+      topic: groupId,
+    };
+    console.log(data);
+
+    return fetch('https://us-central1-elcartua.cloudfunctions.net/sendNotificationToTopic', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then(response => response.text())
+      .then(result => console.log('Notificación enviada:', result))
+      .catch(error => console.error('Error al enviar la notificación:', error));
   }
 
   const deleteCloudBook = (item) => {
@@ -160,7 +209,7 @@ const Reserva = ({ route }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{vehicle}</Text>
-      <TablaReservas 
+      <TablaReservas
         vehicle={vehicle}
         book_time={book_time}
         booksToday={booksToday}

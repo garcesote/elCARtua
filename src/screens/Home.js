@@ -7,6 +7,8 @@ import { firebase } from '@react-native-firebase/database';
 import FormContainer from '../components/FormContainer';
 import CarContainer from '../components/CarContainer';
 import { Alert } from 'react-native';
+import { subscribe } from 'diagnostics_channel';
+import messaging from '@react-native-firebase/messaging';
 
 
 const Home = ({ navigation }) => {
@@ -41,6 +43,7 @@ const Home = ({ navigation }) => {
     }
 
     useEffect(() => {
+        // subscribeToGroupNotifications("test");
         //Recoge la info acerca de la sesión iniciada (usuarioLocal, usuarioNube, grupo)
         getLocalUserID().then(id => {
             getCloudUserData(id).then(id => {
@@ -138,6 +141,35 @@ const Home = ({ navigation }) => {
         }
     }
 
+    const subscribeToGroupNotifications = (topic) => {
+        messaging()
+            .getToken()
+            .then(token => {
+                // Suscribir al dispositivo al tema
+                messaging()
+                    .subscribeToTopic(topic)
+                    .then(() => {
+                        console.log('Dispositivo suscrito al topic ' + topic);
+                    })
+                    .catch(error => {
+                        console.log('Error al suscribir el dispositivo al tema:', error);
+                    });
+            })
+            .catch(error => {
+                console.log('Error al obtener el token de registro:', error);
+            });
+    }
+
+    const unsubscribeFromGroupNotifications = (topic) => {
+        messaging()
+            .unsubscribeFromTopic(topic)
+            .then(() => {
+                console.log('Desuscripción exitosa del tema:', topic);
+            })
+            .catch(error => {
+                console.log('Error al desuscribirse del tema:', error);
+            });
+    }
 
     const joinGroup = async () => {
         console.log('holaaa');
@@ -155,6 +187,8 @@ const Home = ({ navigation }) => {
                 usersRef.child(key).update({
                     group: groupID,
                 });
+
+                subscribeToGroupNotifications(groupID);
                 Alert.alert('Te has unido correctamente al grupo:' + groupID);
                 console.log('El usuario se ha unido al grupo:', groupID);
                 reloadPage();
@@ -184,6 +218,7 @@ const Home = ({ navigation }) => {
                 })
                 const groupKey = groupData.id;
                 groupsRef.child(groupKey).remove();
+                unsubscribeFromGroupNotifications();
                 Alert.alert('El grupo se ha borrado correctamente');
                 reloadPage();
             } catch {

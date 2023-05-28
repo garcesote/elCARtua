@@ -3,15 +3,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Reserva from './src/screens/Reserva';
 import Login from './src/screens/Login';
-import Menu from './src/Menu';
 import Home from './src/screens/Home';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ContextBooksProvider } from './src/comun/ContextBooks';
 
-import { collection, query, where, onSnapshot, getFirestore, doc, getDoc, getDocs } from "firebase/firestore";
 import { initializeApp } from 'firebase/app';
-// import { firebaseConfig } from 'firebase-config';
-
+import messaging from '@react-native-firebase/messaging';
+import { PermissionsAndroid, Alert } from 'react-native';
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -28,11 +26,17 @@ const App = () => {
   };
 
   const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
 
   const [today_band, setToday_band] = useState('');
 
   useEffect(() => {
+    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+
+    messaging().setBackgroundMessageHandler(async remoteMessage => {
+      console.log('Message handled in the background!', remoteMessage);
+    });
+
+    // registerNotificationListener();
     console.log("useEffect app");
     const today = new Date();
     let today_band_aux = "";
@@ -40,28 +44,18 @@ const App = () => {
     setToday_band(today_band_aux);
 
     AsyncStorage.setItem("today_band", today_band_aux);
-
-    //queryDB(today_band_aux);
   }, [])
 
-  // const queryDB = (today_band_aux) => {
-  //   console.log("Today_band: " + today_band_aux);
-  //   console.log("query to db...");
-  //   let db_bands = [];
-  //   const q = query(collection(db, "groups", "group1", "books")); // , where("band", "==", true)
-  //   getDocs(q)
-  //     .then((querySnapshot) => {
-  //       querySnapshot.forEach((doc) => {
-  //         db_bands.push(doc.data());
-  //         // console.log(doc.id, " => ", doc.data());
-  //       });
-  //     }).catch((error) => {
-  //       console.error(error);
-  //     })
-  //   console.log(db_bands);
-  // }
+  useEffect(() => {
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      Alert.alert('El que no corre vuela!', remoteMessage.notification.body);
+      console.log()
+    });
 
+    return unsubscribe;
+  }, []);
 
+  
   return (
     <NavigationContainer>
       <ContextBooksProvider>
