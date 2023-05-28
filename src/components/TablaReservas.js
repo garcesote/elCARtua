@@ -143,9 +143,6 @@ const TablaReservas = ({ vehicle, book_time, booksToday, todayBand, setCloudNewB
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   band: {
     minHeight: height / 6,
     borderBottomWidth: 1,
@@ -165,7 +162,6 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     height: height - 200, // Define la altura del ScrollView
-
   },
   content: {
     flex: 1,
@@ -213,7 +209,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   timeSlotContainer: {
-    minHeight: height / 6,
+    minHeight: height / 8,
     borderBottomWidth: 1,
     flexDirection: 'row',
     alignItems: 'center',
@@ -226,6 +222,7 @@ const styles = StyleSheet.create({
   },
   time: {
     fontSize: 16,
+    color: "black"
   },
   statusContainer: {
     paddingHorizontal: 10,
@@ -238,6 +235,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
+    color: "black"
+
   },
 });
 
