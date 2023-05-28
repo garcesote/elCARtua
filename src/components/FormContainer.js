@@ -1,6 +1,7 @@
 import { firebase } from '@react-native-firebase/database';
-import React, {useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, TextInput, Alert} from 'react-native';
+import React, {useState} from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, TextInput, Alert} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 const FormContainer = ({ onSend, onBack, userData }) => {
@@ -26,6 +27,7 @@ const FormContainer = ({ onSend, onBack, userData }) => {
         //Genero un número random de 5 digitos
         const id = Math.floor(Math.random() * 100000);
         const idString = id.toString();
+        console.log(vehiclesVal);
         //Añado el grupo a la db
         groupsRef.child(idString)
         .set({
@@ -71,8 +73,8 @@ const FormContainer = ({ onSend, onBack, userData }) => {
     };
   
     return (
-      <View style={styles.container}>
-        <Text style={styles.title}>Completa los campos</Text>
+      <SafeAreaView style={styles.safeArea}>
+        <Text style={styles.text}>Completa los campos</Text>
         <TextInput
           style={styles.input}
           placeholder="Nombre del grupo"
@@ -107,7 +109,7 @@ const FormContainer = ({ onSend, onBack, userData }) => {
             <Text style={styles.buttonText}>Enviar</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </SafeAreaView>
     );
 };
 
@@ -117,16 +119,26 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
+    backgroundColor: "#262b2f"
   },
+  safeArea: {
+    backgroundColor: "#262b2f",
+    height: Dimensions.get('window').height,
+    width: Dimensions.get('window').width,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+   },
   buttoncontainer:{
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  title: {
+  text: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 16,
+
   },
   input: {
     width: 200,

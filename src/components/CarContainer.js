@@ -3,13 +3,13 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 
-const CarContainer = ({ nombre, navigation }) => {
+const CarContainer = ({ nombre, groupId, navigation}) => {
   return (
     <TouchableOpacity onPress={() => navigation.navigate("Reserva", {vehicle: nombre})}>
         <View style={styles.container}>
             <Icon name="car" size={30} color="black" />
             <Text style={styles.text}>{nombre}</Text>
-            <TouchableOpacity onPress={() => navigation.navigate("AddPicture")}>
+            <TouchableOpacity onPress={() => navigation.navigate("AddPicture", {vehicle: nombre, groupId: groupId})}>
               <Icon name="camera" size={30} color="black" />
             </TouchableOpacity>
         </View>
