@@ -166,7 +166,7 @@ const Reserva = ({ route }) => {
     console.log(notificationData);
     let body = userName + " ha reservado " + vehicle + " las siguientes horas: ";
     notificationData.map((item) => {
-      body += item.start_time.toString() + " - " + item.end_time.toString();
+      body += " " + item.start_time.toString() + " - " + item.end_time.toString();
     })
 
     const data = {
