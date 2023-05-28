@@ -47,14 +47,14 @@ const App = () => {
     AsyncStorage.setItem("today_band", today_band_aux);
   }, [])
 
-  useEffect(() => {
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
-      Alert.alert('El que no corre vuela!', remoteMessage.notification.body);
-      console.log()
-    });
+  // useEffect(() => {
+  //   const unsubscribe = messaging().onMessage(async remoteMessage => {
+  //     Alert.alert('El que no corre vuela!', remoteMessage.notification.body);
+  //     console.log()
+  //   });
 
-    return unsubscribe;
-  }, []);
+  //   return unsubscribe;
+  // }, []);
 
   
   return (

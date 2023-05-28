@@ -218,7 +218,7 @@ const Home = ({ navigation }) => {
                 })
                 const groupKey = groupData.id;
                 groupsRef.child(groupKey).remove();
-                unsubscribeFromGroupNotifications();
+                unsubscribeFromGroupNotifications(groupKey);
                 Alert.alert('El grupo se ha borrado correctamente');
                 reloadPage();
             } catch {

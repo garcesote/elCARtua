@@ -170,7 +170,7 @@ const Reserva = ({ route }) => {
     })
 
     const data = {
-      title: 'Nueva reserva!',
+      title: '¡El que no corre vuela!',
       body: body,
       topic: groupId,
     };
