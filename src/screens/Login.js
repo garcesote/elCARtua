@@ -6,6 +6,7 @@ import auth from '@react-native-firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { firebase } from '@react-native-firebase/database';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { color } from 'react-native-reanimated';
 
 const Login = ({navigation}) => {
 
@@ -161,7 +162,8 @@ const styles = StyleSheet.create({
   googleButtonText: {
    marginLeft: 16,
    fontSize: 18,
-   fontWeight: '600'
+   fontWeight: '600',
+   color: 'black'
   },
   googleIcon: {
    height: 24,

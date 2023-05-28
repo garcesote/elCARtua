@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Reserva from './src/screens/Reserva';
 import Login from './src/screens/Login';
+import AddPicture from './src/screens/AddPicture';
 import Home from './src/screens/Home';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ContextBooksProvider } from './src/comun/ContextBooks';
@@ -61,6 +62,7 @@ const App = () => {
       <ContextBooksProvider>
         <Stack.Navigator initialRouteName="Login">
           <Stack.Screen name="Reserva" component={Reserva} />
+          <Stack.Screen name="AddPicture" component={AddPicture} />
           <Stack.Screen name="Login" component={Login} options={{ headerLeft: null }} />
           <Stack.Screen name="Home" component={Home} options={{ headerLeft: null }} />
         </Stack.Navigator>

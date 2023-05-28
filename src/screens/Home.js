@@ -108,7 +108,9 @@ const Home = ({ navigation }) => {
             const userData = await AsyncStorage.getItem("user_data");
             setUserLocalData(JSON.parse(userData));
             console.log('USER LOCAL:', JSON.parse(userData));
-            return (JSON.parse(userData).userID);
+            if(JSON.parse(userData).userID){
+                return (JSON.parse(userData).userID);
+            }
         } catch (error) {
             console.error('Error al consultar AsyncStorage: ', error);
             throw error;
@@ -172,7 +174,6 @@ const Home = ({ navigation }) => {
     }
 
     const joinGroup = async () => {
-        console.log('holaaa');
         // Compruebo si existe ya el grupo
         try {
             const snapshot = await groupsRef.once('value');
@@ -206,7 +207,6 @@ const Home = ({ navigation }) => {
         reloadPage()
         if (groupData) {
             try {
-                console.log('HOLAAA');
                 console.log(groupData.groupData.users);
                 groupData.groupData.users.map(user => {
                     const key = user.userID;
@@ -288,7 +288,7 @@ const Home = ({ navigation }) => {
                                 <Text style={styles.text}>Pincha en el coche para reservar las horas</Text>
                             </View>
                             {groupData.groupData.vehicles.map((vehicle, index) => (
-                                <CarContainer key={index} nombre={vehicle} navigation={navigation} />
+                                <CarContainer key={index} groupId={userCloudData.group} nombre={vehicle} navigation={navigation} />
                             ))}
                             <TouchableOpacity style={styles.buttonDel}
                                 onPress={showConfirmDialog}>
@@ -315,12 +315,8 @@ const Home = ({ navigation }) => {
                         </SafeAreaView>
                     );
                 }
-
-
             }
         }
-
-
     }
 };
 
