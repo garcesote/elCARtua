@@ -35,7 +35,7 @@ const Login = ({navigation}) => {
     setUser(user);
     
     if(user){
-      navigation.navigate("Home");
+      navigation.replace("Home");
     }
     if (initializing) setInitializing(false);
   }

@@ -110,7 +110,7 @@ const FormContainer = ({ onSend, onBack, userData }) => {
           <TextInput
             key={index}
             style={styles.input}
-            placeholder={"Nombre del vehiculo" + { index }}
+            placeholder={"Nombre del vehiculo"}
             value={vehiclesVal[index] || ''}
             onChangeText={text => handleInputChange(index, text)}
           />
@@ -118,7 +118,7 @@ const FormContainer = ({ onSend, onBack, userData }) => {
 
       {vehiclesNum.length < 4 && (
         <TouchableOpacity style={styles.button} onPress={addVehicle}>
-          <Text style={styles.buttonText}>Añadir vehículo</Text>
+          <Text style={styles.buttonText}>Añadir vehículo +</Text>
         </TouchableOpacity>
       )}
 
@@ -143,6 +143,7 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: "#262b2f"
   },
+
   safeArea: {
     backgroundColor: "#262b2f",
     height: Dimensions.get('window').height,
@@ -157,13 +158,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    fontSize: 20,
+    fontSize: 30,
     fontWeight: 'bold',
     marginBottom: 16,
-
   },
   input: {
-    width: 200,
+    width: 250,
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
@@ -171,13 +171,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   button: {
-    margin: 5,
-    backgroundColor: 'blue',
-    padding: 10,
-    marginHorizontal: 5,
-    borderRadius: 5,
+        width: 'auto',
+        height: 50,
+        borderRadius: 5,
+        alignItems: 'center',
+        margin: 10,
+        padding:10,
+        justifyContent: 'center',
+        borderWidth: 2,
+        backgroundColor: 'blue'
   },
   buttonText: {
+    fontSize:18,
     color: 'white',
     fontWeight: 'bold',
   },

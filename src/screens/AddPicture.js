@@ -1,9 +1,10 @@
 import React, { useState, useEffect  } from 'react';
-import { Button, Image, View, Text,StyleSheet, Alert, ActivityIndicator } from 'react-native';
+import { Button, Image, View, Text,StyleSheet, Alert, ActivityIndicator, TouchableOpacity } from 'react-native';
 import {launchCamera} from 'react-native-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Icon from 'react-native-vector-icons/Ionicons';
 
-import { utils } from '@react-native-firebase/app';
+
 import storage from '@react-native-firebase/storage';
 
 const AddPicture = ({ route }) => {
@@ -81,13 +82,18 @@ const AddPicture = ({ route }) => {
           source={{ uri: fileUri }}
           style={styles.images}
           resizeMode="contain" 
-        />{captured && <Button styles={styles.button} title="Actualizar imagen" onPress={() => subirImagen()} />
+        />{captured && <TouchableOpacity style={styles.button} onPress={() => subirImagen()}>
+            <View style={styles.buttonCont}>
+              <Text style={styles.text}>Actualizar Imagen</Text>
+              <Icon name="download" style={{marginLeft:5}} size={30} color="black" />
+            </View>
+        </TouchableOpacity>
       }
       </View>
       )
     } else {
       return(
-        <Text style={{fontSize:16}}> Pulse el botón para sacarle una foto al coche</Text>
+        <Text style={styles.text}> Pulse el botón para sacarle una foto al coche</Text>
       )
     }
   }
@@ -104,7 +110,12 @@ const AddPicture = ({ route }) => {
     return (
 
       <View style={styles.container}>
-        <Button styles={styles.button} title="Capturar imagen" onPress={selectImage} />
+        <TouchableOpacity style={styles.button} onPress={() => selectImage()}>
+          <View style={styles.buttonCont}>
+            <Text style={styles.text}>Capturar Imagen</Text>
+            <Icon name="camera" style={{marginLeft:5}} size={30} color="black" />
+          </View>
+        </TouchableOpacity>
         {renderFileUri()}
       </View>
       
@@ -115,24 +126,43 @@ const AddPicture = ({ route }) => {
 const styles = StyleSheet.create({
 
   container: {
-      padding: 10,
-      alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   button: {
-    margin:5,
-    backgroundColor: 'blue',
-    padding: 10,
-    marginHorizontal: 5,
-    borderRadius: 5,
+    width: 'auto',
+    height: 50,
+    borderRadius: 25,
+    alignItems: 'center',
+    margin: 10,
+    padding:5,
+    justifyContent: 'center',
+    borderWidth: 2,
+    backgroundColor: 'lightgray'
+  },
+
+  buttonCont: {
+    flexDirection:'row',
+    justifyContent: 'space-between',
+    padding:5
+
   },
 
   images: {
+    borderRadius: 150,
     margin: 20,
     width: '100%', // Puedes ajustar el ancho según tus necesidades
     height: undefined, // Esto permite que la altura se ajuste automáticamente según el aspecto de la imagen
     aspectRatio: 1, // Esto asegura que la imagen se muestre en su relación de aspecto original
   },
+
+  text: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color:'black'
+},
 
   loadingText: {
       marginTop: 16,

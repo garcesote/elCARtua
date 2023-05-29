@@ -61,13 +61,27 @@ const App = () => {
     <NavigationContainer>
       <ContextBooksProvider>
         <Stack.Navigator initialRouteName="Login">
-          <Stack.Screen name="Reserva" component={Reserva} />
-          <Stack.Screen name="AddPicture" component={AddPicture} />
-          <Stack.Screen name="Login" component={Login} options={{ headerLeft: null }} />
-          <Stack.Screen name="Home" component={Home} options={{ headerLeft: null }} />
+          <Stack.Screen name="Reserva" component={Reserva} options={{
+            headerStyle: {
+              backgroundColor: 'lightgray', // Cambia el color del título aquí
+            },
+          }}/>
+          <Stack.Screen name="AddPicture" component={AddPicture} options={{
+            headerStyle: {
+              backgroundColor: 'lightgray', // Cambia el color del título aquí
+            },
+          }}/>
+          <Stack.Screen name="Login" component={Login} options={{
+            headerLeft: null,
+          }}/>
+          <Stack.Screen name="Home" component={Home} options={{
+            headerLeft: null,
+            headerStyle: {
+              backgroundColor: 'lightgray', // Cambia el color del título aquí
+            },
+          }}/>
         </Stack.Navigator>
       </ContextBooksProvider>
-
     </NavigationContainer>
   );
 };

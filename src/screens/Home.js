@@ -37,7 +37,7 @@ const Home = ({ navigation }) => {
             .signOut()
             .then(() => {
                 console.log('User signed out!');
-                navigation.navigate("Login");
+                navigation.replace("Login");
             }
             );
     }
@@ -188,7 +188,22 @@ const Home = ({ navigation }) => {
                 usersRef.child(key).update({
                     group: groupID,
                 });
-
+                console.log('GROUP_DATA: ');
+                console.log(groupsData)
+                console.log('GROUP_ID: ');
+                console.log(groupID);
+                const strID = groupID.toString();
+                console.log('GROUP_DATA_GROUP: ');
+                console.log(groupsData[strID]);
+                //Añado al grupo el usuario
+                if(groupsData[groupID]){
+                    console.log('USERS:'+ groupsData[strID].users);
+                    const users = groupsData[strID].users;
+                    users.push(userLocalData);
+                    groupsRef.child(groupID).update({
+                        users: users,
+                    })
+                }
                 subscribeToGroupNotifications(groupID);
                 Alert.alert('Te has unido correctamente al grupo:' + groupID);
                 console.log('El usuario se ha unido al grupo:', groupID);
@@ -207,10 +222,11 @@ const Home = ({ navigation }) => {
         reloadPage()
         if (groupData) {
             try {
+                console.log('USERS: ');
                 console.log(groupData.groupData.users);
                 groupData.groupData.users.map(user => {
                     const key = user.userID;
-                    console.log(key);
+                    console.log('KEYY:'+key);
                     // Añado el grupo al usuario
                     usersRef.child(key).update({
                         group: 'null',
@@ -250,55 +266,58 @@ const Home = ({ navigation }) => {
         } else {
             if (userCloudData.group == 'null') {
                 return (
-                    <SafeAreaView>
-                        <View>
+                    <SafeAreaView style={styles.container}>
+                        <View style={styles.container}>
                             <Text style={styles.text}>Bienvenido {userLocalData.userName}!!!</Text>
                             <Text style={styles.text}>Parece que todavía no te has unido a un grupo</Text>
                             <Text style={styles.text}>Prueba a crear uno o unirte a uno ya creado introduciendo el código</Text>
+                        
+                            <TouchableOpacity style={styles.button} onPress={newGroupForm}>
+                                <Text style={styles.text}>Crear un grupo</Text>
+                            </TouchableOpacity>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Código del grupo"
+                                value={groupID}
+                                placeholderTextColor="gray"
+                                onChangeText={text => setGroupID(text)}
+                            />
+                            <TouchableOpacity style={styles.button} onPress={() => joinGroup()}>
+                                <Text style={styles.text}>Unirse al grupo</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={[styles.button, { backgroundColor: '#FF6666' }]} onPress={() => logout()}>
+                                <Text style={styles.text}>Logout</Text>
+                            </TouchableOpacity>
                         </View>
-                        <TouchableOpacity style={styles.button} onPress={newGroupForm}>
-                            <Text style={styles.text}>Crear un grupo</Text>
-                        </TouchableOpacity>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Código del grupo"
-                            value={groupID}
-                            onChangeText={text => setGroupID(text)}
-                        />
-                        <TouchableOpacity style={styles.button} onPress={() => joinGroup()}>
-                            <Text style={styles.text}>Unirse al grupo</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.button} onPress={() => logout()}>
-                            <Text style={styles.text}>Logout</Text>
-                        </TouchableOpacity>
-
                     </SafeAreaView>
                 )
             } else {
                 if (groupData.groupData) {
                     console.log(groupData.groupData)
                     return (
-                        <SafeAreaView>
+                        <SafeAreaView style={styles.container}>
                             <View>
                                 <Text style={styles.text}>Bienvenido {userLocalData.userName}!!</Text>
                             </View>
                             <View>
-                                <Text style={styles.text}>Tu grupo es el gupo: {groupData.groupData.name}</Text>
-                                <Text style={styles.text}>Comparte este número para que familiares o amigos se unan al grupo: {groupData.id}</Text>
+                                <Text style={styles.text}>Tu grupo es el gupo: </Text>
+                                <Text style={styles.title}>{groupData.groupData.name}</Text>
+                                <Text style={styles.text}>Comparte este número para que familiares o amigos se unan al grupo: </Text>
+                                <Text style={styles.title}>{groupData.id}</Text>
                                 <Text style={styles.text}>Pincha en el coche para reservar las horas</Text>
                             </View>
                             {groupData.groupData.vehicles.map((vehicle, index) => (
-                                <CarContainer key={index} groupId={userCloudData.group} nombre={vehicle} navigation={navigation} />
+                                <CarContainer key={index} groupId={userCloudData.group} book={groupData} nombre={vehicle} navigation={navigation} />
                             ))}
-                            <TouchableOpacity style={styles.buttonDel}
+                            <TouchableOpacity style={[styles.button, { backgroundColor: 'red' }]}
                                 onPress={showConfirmDialog}>
                                 <Text style={styles.text}>Eliminar grupo</Text>
                             </TouchableOpacity>
                             {confirmVisible && (
-                                <View>
+                                <View style={styles.container}>
                                     <Text style={styles.text}>¿Estás seguro de que quieres eliminar el grupo?</Text>
                                     <View style={styles.buttonContainer}>
-                                        <TouchableOpacity style={styles.button} onPress={handleDelete}>
+                                        <TouchableOpacity style={[styles.button, { backgroundColor: 'red' }]} onPress={handleDelete}>
                                             <Text style={styles.text}>Confirmar</Text>
                                         </TouchableOpacity>
 
@@ -308,7 +327,7 @@ const Home = ({ navigation }) => {
                                     </View>
                                 </View>
                             )}
-                            <TouchableOpacity style={styles.button}
+                            <TouchableOpacity style={[styles.button, { backgroundColor: '#FF6666' }]}
                                 onPress={() => logout()}>
                                 <Text style={styles.text}>Logout</Text>
                             </TouchableOpacity>
@@ -330,29 +349,25 @@ const styles = StyleSheet.create({
         marginTop: 16,
         fontSize: 18,
         fontWeight: 'bold',
+        color: 'black'
     },
     button: {
         width: 'auto',
         height: 50,
+        borderRadius: 25,
         alignItems: 'center',
-        margin: 2,
+        margin: 10,
+        padding:5,
         justifyContent: 'center',
-        borderWidth: 2
-    },
-    buttonDel: {
-        backgroundColor: 'red',
-        width: 'auto',
-        height: 50,
-        alignItems: 'center',
-        margin: 2,
-        justifyContent: 'center',
-        borderWidth: 2
-    },
+        borderWidth: 2,
+        backgroundColor: 'lightgray'
+      },
     input: {
         width: 200,
         height: 40,
         margin: 20,
         borderColor: 'gray',
+        color: 'black',
         borderWidth: 1,
         paddingHorizontal: 8,
     },
@@ -365,20 +380,16 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         fontWeight: 'bold',
-        marginBottom: 16,
-    },
-    input: {
-        width: '100%',
-        height: 40,
-        borderColor: 'gray',
-        borderWidth: 1,
-        marginBottom: 16,
-        paddingHorizontal: 8,
+        color: 'black'
     },
     buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        width: '100%',
+        alignItems: 'center',
+        padding: 10,
+        margin: 5,
+        borderRadius: 6,
+        
     },
     text: {
         margin: 5,
